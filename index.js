@@ -71,24 +71,12 @@ app.post('/posts', (req, res) => {
 // PATCH a post when you just want to update one parameter
 app.patch('/posts/:id', (req, res) => {
   const paramId = parseInt(req.params.id);
-  // const post = posts.findIndex((post) => {
-  //   post.id === paramId;
-  // });
-  const postIndex = posts.findIndex((post) => post.id === paramId);
-  const post = posts[postIndex];
-  if (!post) {
-    return res.status(404).json({ message: 'Post not found' });
-  }
-  if (req.body.title) {
-    post.title = req.body.title;
-  }
-  if (req.body.content) {
-    post.content = req.body.content;
-  }
+  const post = posts.find((post) => post.id === paramId);
+  if (!post) return res.status(404).json({ message: 'Post not found' });
 
-  if (req.body.author) {
-    post.author = req.body.author;
-  }
+  if (req.body.title) post.title = req.body.title;
+  if (req.body.content) post.content = req.body.content;
+  if (req.body.author) post.author = req.body.author;
 
   res.json(post);
 });
