@@ -64,13 +64,46 @@ app.post('/posts', (req, res) => {
     date: new Date(),
   };
   lastId = newId;
-  post.push(post);
-  req.status(201).json(post);
+  posts.push(post);
+  res.status(201).json(post);
 });
 
-//CHALLENGE 4: PATCH a post when you just want to update one parameter
+// PATCH a post when you just want to update one parameter
+app.patch('/posts/:id', (req, res) => {
+  const paramId = parseInt(req.params.id);
+  // const post = posts.findIndex((post) => {
+  //   post.id === paramId;
+  // });
+  const postIndex = posts.findIndex((post) => post.id === paramId);
+  const post = posts[postIndex];
+  if (!post) {
+    return res.status(404).json({ message: 'Post not found' });
+  }
+  if (req.body.title) {
+    post.title = req.body.title;
+  }
+  if (req.body.content) {
+    post.content = req.body.content;
+  }
 
-//CHALLENGE 5: DELETE a specific post by providing the post id.
+  if (req.body.author) {
+    post.author = req.body.author;
+  }
+
+  res.json(post);
+});
+
+// DELETE a specific post by providing the post id.
+app.delete('/posts/:id', (req, res) => {
+  const paramId = parseInt(req.params.id);
+  const index = posts.findIndex((post) => post.id === paramId);
+  if (index === -1) {
+    return res.status(404).json({ message: 'Post not found' });
+  }
+
+  posts.splice(index, 1);
+  res.json({ message: 'Post deleted' });
+});
 
 app.listen(port, () => {
   console.log(`API is running at http://localhost:${port}`);
