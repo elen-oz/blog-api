@@ -37,11 +37,36 @@ let lastId = 3;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//CHALLENGE 1: GET All posts
+// GET All posts
+app.get('/posts', (req, res) => {
+  console.log(posts);
+  res.json(posts);
+});
 
-//CHALLENGE 2: GET a specific post by id
+// GET a specific post by id
+app.get('/posts/:id', (req, res) => {
+  const paramId = parseInt(req.params.id);
+  const post = posts.find((post) => post.id === paramId);
+  if (!post) {
+    return res.status(404).json({ message: 'Post not found' });
+  }
+  res.json(post);
+});
 
-//CHALLENGE 3: POST a new post
+// POST a new post
+app.post('/posts', (req, res) => {
+  const newId = (lastId += 1);
+  const post = {
+    id: newId,
+    title: req.body.title,
+    content: req.body.content,
+    author: req.body.author,
+    date: new Date(),
+  };
+  lastId = newId;
+  post.push(post);
+  req.status(201).json(post);
+});
 
 //CHALLENGE 4: PATCH a post when you just want to update one parameter
 
